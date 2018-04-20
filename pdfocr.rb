@@ -77,6 +77,7 @@ useocropus = false
 usecuneiform = false
 usetesseract = false
 runUnpaper = false
+resolution = '300'
 
 optparse = OptionParser.new { |opts|
 opts.banner = <<-eos
@@ -125,6 +126,10 @@ eos
 
   opts.on("-k", "--keep", "Keep temporary files around") {
     deletefiles = false
+  }
+  
+  opts.on("-r", "--resolution [RESOLUTION]", "Set custom resolution for new pdf file"){ |fn|
+	resolution = fn
   }
 
   opts.on_tail("-h", "--help", "Show this message") {
@@ -341,7 +346,7 @@ Dir.chdir(tmp+"/") {
   end
   puts "Converting page #{i} to ppm"
 
-  sh "pdftoppm -r 300 #{shell_escape(basefn)}.pdf >#{shell_escape(basefn)}.ppm"
+  sh "pdftoppm -r #{resolution} #{shell_escape(basefn)}.pdf >#{shell_escape(basefn)}.ppm"
   if not File.file?(basefn+'.ppm')
     puts "Error while converting page #{i} to ppm"
     next
